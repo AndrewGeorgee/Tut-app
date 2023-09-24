@@ -2,8 +2,8 @@ import 'package:dartz/dartz.dart';
 
 import '../../data/network/failure.dart';
 import '../../data/network/requests.dart';
-import '../entites/modelis.dart';
-import '../repositery/repository.dart';
+import '../model/models.dart';
+import '../repository/repository.dart';
 import 'base_usecase.dart';
 
 class RegisterUseCase

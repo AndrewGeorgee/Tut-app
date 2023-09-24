@@ -1,35 +1,32 @@
 import 'package:dartz/dartz.dart';
 import 'package:learn_api/data/mapper/mapper.dart';
-import 'package:learn_api/data/network/failure.dart';
-import 'package:learn_api/data/network/requests.dart';
-import 'package:learn_api/domain/entites/modelis.dart';
 
-import '../../domain/repositery/repository.dart';
+import '../../domain/model/models.dart';
+import '../../domain/repository/repository.dart';
 import '../data_source/local_data_source.dart';
 import '../data_source/remote_data_source.dart';
 import '../network/error_handler.dart';
+import '../network/failure.dart';
 import '../network/network_info.dart';
+import '../network/requests.dart';
 
 class RepositoryImpl implements Repository {
   final RemoteDataSource _remoteDataSource;
-  final NetworkInfo _networkInfo;
   final LocalDataSource _localDataSource;
+  final NetworkInfo _networkInfo;
 
   RepositoryImpl(
-    this._remoteDataSource,
-    this._networkInfo,
-    this._localDataSource,
-  );
+      this._remoteDataSource, this._networkInfo, this._localDataSource);
 
   @override
   Future<Either<Failure, Authentication>> login(
-      LodinRequests lodinRequests) async {
+      LoginRequest loginRequest) async {
     if (await _networkInfo.isConnected) {
       // its connected to internet, its safe to call API
       try {
-        final response = await _remoteDataSource.login(lodinRequests);
+        final response = await _remoteDataSource.login(loginRequest);
 
-        if (response.statuse == ApiInternalStatus.SUCCESS) {
+        if (response.status == ApiInternalStatus.SUCCESS) {
           // success
           // return either right
           // return data
@@ -55,16 +52,16 @@ class RepositoryImpl implements Repository {
     if (await _networkInfo.isConnected) {
       try {
         // its safe to call API
-        final response = await _remoteDataSource.forgetPassword(email);
+        final response = await _remoteDataSource.forgotPassword(email);
 
-        if (response.statuse == ApiInternalStatus.SUCCESS) {
+        if (response.status == ApiInternalStatus.SUCCESS) {
           // success
           // return right
           return Right(response.toDomain());
         } else {
           // failure
           // return left
-          return Left(Failure(response.statuse ?? ResponseCode.DEFAULT,
+          return Left(Failure(response.status ?? ResponseCode.DEFAULT,
               response.message ?? ResponseMessage.DEFAULT));
         }
       } catch (error) {
@@ -85,7 +82,7 @@ class RepositoryImpl implements Repository {
       try {
         final response = await _remoteDataSource.register(registerRequest);
 
-        if (response.statuse == ApiInternalStatus.SUCCESS) {
+        if (response.status == ApiInternalStatus.SUCCESS) {
           // success
           // return either right
           // return data
@@ -107,21 +104,27 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, HomeObject>> getHome() async {
+  Future<Either<Failure, HomeObject>> getHomeData() async {
     try {
       // get response from cache
       final response = await _localDataSource.getHomeData();
       return Right(response.toDomain());
-    } catch (error) {
+    } catch (cacheError) {
+      // cache is not existing or cache is not valid
+
+      // its the time to get from API side
       if (await _networkInfo.isConnected) {
         // its connected to internet, its safe to call API
         try {
-          final response = await _remoteDataSource.geyHomeData();
+          final response = await _remoteDataSource.getHomeData();
 
-          if (response.statuse == ApiInternalStatus.SUCCESS) {
+          if (response.status == ApiInternalStatus.SUCCESS) {
             // success
             // return either right
             // return data
+            // save home response to cache
+
+            // save response in cache (local data source)
             _localDataSource.saveHomeToCache(response);
 
             return Right(response.toDomain());
@@ -153,11 +156,11 @@ class RepositoryImpl implements Repository {
       if (await _networkInfo.isConnected) {
         try {
           final response = await _remoteDataSource.getStoreDetails();
-          if (response.statuse == ApiInternalStatus.SUCCESS) {
+          if (response.status == ApiInternalStatus.SUCCESS) {
             _localDataSource.saveStoreDetailsToCache(response);
             return Right(response.toDomain());
           } else {
-            return Left(Failure(response.statuse ?? ResponseCode.DEFAULT,
+            return Left(Failure(response.status ?? ResponseCode.DEFAULT,
                 response.message ?? ResponseMessage.DEFAULT));
           }
         } catch (error) {

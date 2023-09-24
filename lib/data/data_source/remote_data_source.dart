@@ -1,34 +1,37 @@
-import 'package:learn_api/data/responce/responce.dart';
-
 import '../network/app_api.dart';
 import '../network/requests.dart';
+import '../response/responses.dart';
 
 abstract class RemoteDataSource {
-  Future<AuthenticationResponce> login(LodinRequests lodinRequests);
-  Future<AuthenticationResponce> register(RegisterRequest registerRequest);
-  Future<ForgetPasswordResponce> forgetPassword(String email);
-  Future<HomeResponse> geyHomeData();
+  Future<AuthenticationResponse> login(LoginRequest loginRequest);
+
+  Future<AuthenticationResponse> register(RegisterRequest registerRequest);
+
+  Future<ForgotPasswordResponse> forgotPassword(String email);
+
+  Future<HomeResponse> getHomeData();
+
   Future<StoreDetailsResponse> getStoreDetails();
 }
 
-class RemoteDataSourceImp implements RemoteDataSource {
+class RemoteDataSourceImpl implements RemoteDataSource {
   final AppServiceClient _appServiceClient;
 
-  RemoteDataSourceImp(this._appServiceClient);
+  RemoteDataSourceImpl(this._appServiceClient);
 
   @override
-  Future<AuthenticationResponce> login(LodinRequests lodinRequests) async {
+  Future<AuthenticationResponse> login(LoginRequest loginRequest) async {
     return await _appServiceClient.login(
-        lodinRequests.email, lodinRequests.password);
+        loginRequest.email, loginRequest.password);
   }
 
   @override
-  Future<ForgetPasswordResponce> forgetPassword(String email) async {
-    return await _appServiceClient.forgetPassword(email);
+  Future<ForgotPasswordResponse> forgotPassword(String email) async {
+    return await _appServiceClient.forgotPassword(email);
   }
 
   @override
-  Future<AuthenticationResponce> register(
+  Future<AuthenticationResponse> register(
       RegisterRequest registerRequest) async {
     return await _appServiceClient.register(
         registerRequest.userName,
@@ -36,11 +39,11 @@ class RemoteDataSourceImp implements RemoteDataSource {
         registerRequest.mobileNumber,
         registerRequest.email,
         registerRequest.password,
-        registerRequest.profilePicture);
+        "");
   }
 
   @override
-  Future<HomeResponse> geyHomeData() async {
+  Future<HomeResponse> getHomeData() async {
     return await _appServiceClient.getHomeData();
   }
 

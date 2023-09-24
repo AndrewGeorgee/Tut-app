@@ -1,10 +1,9 @@
-// ignore_for_file: unused_local_variable, constant_identifier_names, no_leading_underscores_for_local_identifiers, avoid_print
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:learn_api/app/app_prefs.dart';
-import 'package:learn_api/app/constance.dart';
+import 'package:learn_api/app/constants.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+
+import '../../app/app_prefs.dart';
 
 const String APPLICATION_JSON = "application/json";
 const String CONTENT_TYPE = "content-type";
@@ -24,11 +23,11 @@ class DioFactory {
     Map<String, String> headers = {
       CONTENT_TYPE: APPLICATION_JSON,
       ACCEPT: APPLICATION_JSON,
-      AUTHORIZATION: Constant.token,
+      AUTHORIZATION: Constants.token,
       DEFAULT_LANGUAGE: language
     };
     dio.options = BaseOptions(
-      baseUrl: Constant.baseUrl,
+      baseUrl: Constants.baseUrl,
       headers: headers,
       connectTimeout: Duration(
         milliseconds: _timeOut,
@@ -38,6 +37,8 @@ class DioFactory {
       ),
       sendTimeout: Duration(milliseconds: _timeOut),
     );
+
+    //! show in debugging mode
     if (!kReleaseMode) {
       dio.interceptors.add(PrettyDioLogger(
         requestHeader: true,

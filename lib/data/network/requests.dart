@@ -1,8 +1,10 @@
-class LodinRequests {
+class LoginRequest {
   String email;
   String password;
-  LodinRequests(this.password, this.email);
+
+  LoginRequest(this.email, this.password);
 }
+
 class RegisterRequest {
   String userName;
   String countryMobileCode;

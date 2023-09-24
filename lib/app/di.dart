@@ -2,38 +2,36 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:learn_api/data/repository/repository_impl.dart';
-import 'package:learn_api/domain/usecase/forget_password_usecase.dart';
+import 'package:learn_api/data/data_source/local_data_source.dart';
+import 'package:learn_api/data/network/app_api.dart';
+import 'package:learn_api/data/network/dio_factory.dart';
 import 'package:learn_api/domain/usecase/home_usecase.dart';
-import 'package:learn_api/domain/usecase/register_usecase.dart';
-import 'package:learn_api/presentaion/screens/register/register_viremodel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../data/data_source/local_data_source.dart';
 import '../data/data_source/remote_data_source.dart';
-import '../data/network/app_api.dart';
-import '../data/network/dio_factory.dart';
 import '../data/network/network_info.dart';
-import '../domain/repositery/repository.dart';
+import '../data/repository/repository_impl.dart';
+import '../domain/repository/repository.dart';
+import '../domain/usecase/forgot_password_usecase.dart';
 import '../domain/usecase/login_usecase.dart';
-import '../domain/usecase/store_details.dart';
-import '../presentaion/screens/forget_password/forget_password_viewmodel.dart';
-import '../presentaion/screens/login/viewmodel/login_viewmodel.dart';
-import '../presentaion/screens/main_screen/main/main_viewmodel.dart';
-import '../presentaion/store/view_model.dart';
+import '../domain/usecase/register_usecase.dart';
+import '../domain/usecase/store_details_usecase.dart';
+import '../presentation/forgot_password/forgot_password_viewmodel.dart';
+import '../presentation/login/viewmodel/login_viewmodel.dart';
+import '../presentation/main/pages/home/viewmodel/home_viewmodel.dart';
+import '../presentation/register/view_model/register_viewmodel.dart';
+import '../presentation/store_details/store_details_viewmodel.dart';
 import 'app_prefs.dart';
 
 final instance = GetIt.instance;
 
-Future<void> initAppModel() async {
+Future<void> initAppModule() async {
   // app module, its a module where we put all generic dependencies
 
   // shared prefs instance
   final sharedPrefs = await SharedPreferences.getInstance();
 
-  instance.registerLazySingleton<SharedPreferences>(
-    () => sharedPrefs,
-  );
+  instance.registerLazySingleton<SharedPreferences>(() => sharedPrefs);
 
   // app prefs instance
   instance
@@ -41,21 +39,21 @@ Future<void> initAppModel() async {
 
   // network info
   instance.registerLazySingleton<NetworkInfo>(
-      () => NetworkInfoImp(InternetConnectionChecker()));
+      () => NetworkInfoImpl(InternetConnectionChecker()));
+
   // dio factory
   instance.registerLazySingleton<DioFactory>(() => DioFactory(instance()));
 
   Dio dio = await instance<DioFactory>().getDio();
   //app service client
-
   instance.registerLazySingleton<AppServiceClient>(() => AppServiceClient(dio));
 
   // remote data source
   instance.registerLazySingleton<RemoteDataSource>(
-      () => RemoteDataSourceImp(instance<AppServiceClient>()));
-  instance.registerLazySingleton<LocalDataSource>(() => LocalDataSourceImpl());
+      () => RemoteDataSourceImpl(instance<AppServiceClient>()));
+
   // local data source
-  // instance.registerLazySingleton<LocalDataSource>(() => LocalDataSourceImpl());
+  instance.registerLazySingleton<LocalDataSource>(() => LocalDataSourceImpl());
 
   // repository
 
@@ -70,12 +68,12 @@ initLoginModule() {
   }
 }
 
-initForgetPasswordModule() {
+initForgotPasswordModule() {
   if (!GetIt.I.isRegistered<ForgotPasswordUseCase>()) {
     instance.registerFactory<ForgotPasswordUseCase>(
         () => ForgotPasswordUseCase(instance()));
-    instance.registerFactory<ForgetPasswordViewModel>(
-        () => ForgetPasswordViewModel(instance()));
+    instance.registerFactory<ForgotPasswordViewModel>(
+        () => ForgotPasswordViewModel(instance()));
   }
 }
 
@@ -90,8 +88,8 @@ initRegisterModule() {
 }
 
 initHomeModule() {
-  if (!GetIt.I.isRegistered<HomeUsecse>()) {
-    instance.registerFactory<HomeUsecse>(() => HomeUsecse(instance()));
+  if (!GetIt.I.isRegistered<HomeUseCase>()) {
+    instance.registerFactory<HomeUseCase>(() => HomeUseCase(instance()));
     instance.registerFactory<HomeViewModel>(() => HomeViewModel(instance()));
   }
 }

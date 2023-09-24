@@ -1,27 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:learn_api/presentaion/resouece/go.dart';
-import 'package:learn_api/presentaion/resouece/theme_manager.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:learn_api/presentation/resources/langauge_manager.dart';
 
+import 'app/app.dart';
 import 'app/di.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initAppModel();
-
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      onGenerateRoute: RouteGenerator.getRoute,
-      theme: getApplicationTheme(),
-      initialRoute: Routes.mainRoute,
-    );
-  }
+  await EasyLocalization.ensureInitialized();
+  await initAppModule();
+  runApp(EasyLocalization(
+      supportedLocales: const [ARABIC_LOCAL, ENGLISH_LOCAL],
+      path: ASSET_PATH_LOCALISATIONS,
+      child: Phoenix(child: MyApp())));
 }

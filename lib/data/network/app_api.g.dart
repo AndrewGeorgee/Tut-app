@@ -13,7 +13,7 @@ class _AppServiceClient implements AppServiceClient {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'https://andrew258.mocklab.io/';
+    baseUrl ??= 'https://andrew258.wiremockapi.cloud';
   }
 
   final Dio _dio;
@@ -21,7 +21,7 @@ class _AppServiceClient implements AppServiceClient {
   String? baseUrl;
 
   @override
-  Future<AuthenticationResponce> login(
+  Future<AuthenticationResponse> login(
     String email,
     String password,
   ) async {
@@ -33,7 +33,7 @@ class _AppServiceClient implements AppServiceClient {
       'password': password,
     };
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<AuthenticationResponce>(Options(
+        _setStreamType<AuthenticationResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -49,25 +49,25 @@ class _AppServiceClient implements AppServiceClient {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = AuthenticationResponce.fromJson(_result.data!);
+    final value = AuthenticationResponse.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<ForgetPasswordResponce> forgetPassword(String email) async {
+  Future<ForgotPasswordResponse> forgotPassword(String email) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = {'email': email};
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<ForgetPasswordResponce>(Options(
+        _setStreamType<ForgotPasswordResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/customers/forgetPassword',
+              '/customers/forgotPassword',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -76,12 +76,12 @@ class _AppServiceClient implements AppServiceClient {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = ForgetPasswordResponce.fromJson(_result.data!);
+    final value = ForgotPasswordResponse.fromJson(_result.data!);
     return value;
   }
 
   @override
-  Future<AuthenticationResponce> register(
+  Future<AuthenticationResponse> register(
     String userName,
     String countryMobileCode,
     String mobileNumber,
@@ -101,7 +101,7 @@ class _AppServiceClient implements AppServiceClient {
       'profile_picture': profilePicture,
     };
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<AuthenticationResponce>(Options(
+        _setStreamType<AuthenticationResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -117,7 +117,7 @@ class _AppServiceClient implements AppServiceClient {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = AuthenticationResponce.fromJson(_result.data!);
+    final value = AuthenticationResponse.fromJson(_result.data!);
     return value;
   }
 
@@ -153,7 +153,7 @@ class _AppServiceClient implements AppServiceClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<StoreDetailsResponse>(Options(
       method: 'GET',
@@ -162,7 +162,7 @@ class _AppServiceClient implements AppServiceClient {
     )
             .compose(
               _dio.options,
-              '/storeDetails/1',
+              '/StoreDetails/1',
               queryParameters: queryParameters,
               data: _data,
             )

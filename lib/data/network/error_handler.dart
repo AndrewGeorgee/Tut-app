@@ -1,7 +1,9 @@
-// ignore_for_file: deprecated_member_use, constant_identifier_names
+// ignore_for_file: constant_identifier_names
 
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
 
+import '../../presentation/resources/strings_manager.dart';
 import 'failure.dart';
 
 class ErrorHandler implements Exception {
@@ -18,7 +20,7 @@ class ErrorHandler implements Exception {
   }
 }
 
-Failure _handleError(DioError error) {
+Failure _handleError(DioException error) {
   switch (error.type) {
     case DioExceptionType.connectionTimeout:
       return DataSource.CONNECT_TIMEOUT.getFailure();
@@ -26,7 +28,7 @@ Failure _handleError(DioError error) {
       return DataSource.SEND_TIMEOUT.getFailure();
     case DioExceptionType.receiveTimeout:
       return DataSource.RECIEVE_TIMEOUT.getFailure();
-    case DioErrorType.unknown:
+    case DioExceptionType.unknown:
       if (error.response != null &&
           error.response?.statusCode != null &&
           error.response?.statusMessage != null) {
@@ -66,37 +68,42 @@ extension DataSourceExtension on DataSource {
   Failure getFailure() {
     switch (this) {
       case DataSource.SUCCESS:
-        return Failure(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+        return Failure(ResponseCode.SUCCESS, ResponseMessage.SUCCESS.tr());
       case DataSource.NO_CONTENT:
-        return Failure(ResponseCode.NO_CONTENT, ResponseMessage.NO_CONTENT);
+        return Failure(
+            ResponseCode.NO_CONTENT, ResponseMessage.NO_CONTENT.tr());
       case DataSource.BAD_REQUEST:
-        return Failure(ResponseCode.BAD_REQUEST, ResponseMessage.BAD_REQUEST);
+        return Failure(
+            ResponseCode.BAD_REQUEST, ResponseMessage.BAD_REQUEST.tr());
       case DataSource.FORBIDDEN:
-        return Failure(ResponseCode.FORBIDDEN, ResponseMessage.FORBIDDEN);
+        return Failure(ResponseCode.FORBIDDEN, ResponseMessage.FORBIDDEN.tr());
       case DataSource.UNAUTORISED:
-        return Failure(ResponseCode.UNAUTORISED, ResponseMessage.UNAUTORISED);
+        return Failure(
+            ResponseCode.UNAUTORISED, ResponseMessage.UNAUTORISED.tr());
       case DataSource.NOT_FOUND:
-        return Failure(ResponseCode.NOT_FOUND, ResponseMessage.NOT_FOUND);
+        return Failure(ResponseCode.NOT_FOUND, ResponseMessage.NOT_FOUND.tr());
       case DataSource.INTERNAL_SERVER_ERROR:
         return Failure(ResponseCode.INTERNAL_SERVER_ERROR,
-            ResponseMessage.INTERNAL_SERVER_ERROR);
+            ResponseMessage.INTERNAL_SERVER_ERROR.tr());
       case DataSource.CONNECT_TIMEOUT:
         return Failure(
-            ResponseCode.CONNECT_TIMEOUT, ResponseMessage.CONNECT_TIMEOUT);
+            ResponseCode.CONNECT_TIMEOUT, ResponseMessage.CONNECT_TIMEOUT.tr());
       case DataSource.CANCEL:
-        return Failure(ResponseCode.CANCEL, ResponseMessage.CANCEL);
+        return Failure(ResponseCode.CANCEL, ResponseMessage.CANCEL.tr());
       case DataSource.RECIEVE_TIMEOUT:
         return Failure(
-            ResponseCode.RECIEVE_TIMEOUT, ResponseMessage.RECIEVE_TIMEOUT);
+            ResponseCode.RECIEVE_TIMEOUT, ResponseMessage.RECIEVE_TIMEOUT.tr());
       case DataSource.SEND_TIMEOUT:
-        return Failure(ResponseCode.SEND_TIMEOUT, ResponseMessage.SEND_TIMEOUT);
+        return Failure(
+            ResponseCode.SEND_TIMEOUT, ResponseMessage.SEND_TIMEOUT.tr());
       case DataSource.CACHE_ERROR:
-        return Failure(ResponseCode.CACHE_ERROR, ResponseMessage.CACHE_ERROR);
+        return Failure(
+            ResponseCode.CACHE_ERROR, ResponseMessage.CACHE_ERROR.tr());
       case DataSource.NO_INTERNET_CONNECTION:
         return Failure(ResponseCode.NO_INTERNET_CONNECTION,
-            ResponseMessage.NO_INTERNET_CONNECTION);
+            ResponseMessage.NO_INTERNET_CONNECTION.tr());
       case DataSource.DEFAULT:
-        return Failure(ResponseCode.DEFAULT, ResponseMessage.DEFAULT);
+        return Failure(ResponseCode.DEFAULT, ResponseMessage.DEFAULT.tr());
     }
   }
 }
@@ -121,94 +128,31 @@ class ResponseCode {
 }
 
 class ResponseMessage {
-  static const SUCCESS = AppStrings.success; // success with data
-  static const NO_CONTENT =
+  static const String SUCCESS = AppStrings.success; // success with data
+  static const String NO_CONTENT =
       AppStrings.success; // success with no data (no content)
-  static const BAD_REQUEST =
+  static const String BAD_REQUEST =
       AppStrings.badRequestError; // failure, API rejected request
-  static const UNAUTORISED =
+  static const String UNAUTORISED =
       AppStrings.unauthorizedError; // failure, user is not authorised
-  static const FORBIDDEN =
+  static const String FORBIDDEN =
       AppStrings.forbiddenError; //  failure, API rejected request
-  static const INTERNAL_SERVER_ERROR =
+  static const String INTERNAL_SERVER_ERROR =
       AppStrings.internalServerError; // failure, crash in server side
   static const String NOT_FOUND =
       AppStrings.notFoundError; // failure, crash in server side
+
   // local status code
-  static const CONNECT_TIMEOUT = AppStrings.timeoutError;
-  static const CANCEL = AppStrings.defaultError;
+  static const String CONNECT_TIMEOUT = AppStrings.timeoutError;
+  static const String CANCEL = AppStrings.defaultError;
   static const String RECIEVE_TIMEOUT = AppStrings.timeoutError;
   static const String SEND_TIMEOUT = AppStrings.timeoutError;
-  static const CACHE_ERROR = AppStrings.cacheError;
-  static const NO_INTERNET_CONNECTION = AppStrings.noInternetError;
-  static const DEFAULT = AppStrings.defaultError;
+  static const String CACHE_ERROR = AppStrings.cacheError;
+  static const String NO_INTERNET_CONNECTION = AppStrings.noInternetError;
+  static const String DEFAULT = AppStrings.defaultError;
 }
 
 class ApiInternalStatus {
   static const int SUCCESS = 0;
   static const int FAILURE = 1;
-}
-
-class AppStrings {
-  static const noRouteFound = "noRouteFound";
-  static const onBoardingTitle1 = "on_boarding_title1";
-  static const onBoardingTitle2 = "on_boarding_title2";
-  static const onBoardingTitle3 = "on_boarding_title3";
-  static const onBoardingTitle4 = "on_boarding_title4";
-
-  static const onBoardingSubTitle1 = "on_boarding_desc1";
-  static const onBoardingSubTitle2 = "on_boarding_desc2";
-  static const onBoardingSubTitle3 = "on_boarding_desc3";
-  static const onBoardingSubTitle4 = "on_boarding_desc4";
-  static const skip = "skip";
-  static const username = "usernameHint";
-  static const password = "password_hint";
-  static const usernameError = "username_error";
-  static const passwordError = "password_error";
-  static const login = "login Button";
-  static const forgetPassword = "forgot_password_text";
-  static const registerText = "register_text";
-  static const loading = "loading";
-  static const retryAgain = "retry_again";
-  static const ok = "ok";
-  static const String emailHint = 'email_hint';
-  static const String invalidEmail = "email_error";
-  static const String resetPassword = "reset_password";
-  static const String success = "success";
-  static const String userNameInvalid = "username_hint_message";
-  static const String mobileNumberInvalid = "mobile_number_hint_message";
-  static const String passwordInvalid = "password_hint_message";
-  static const String alreadyHaveAccount = "already_have_account";
-  static const register = "register";
-  static const mobileNumber = "mobile_number_hint";
-  static const profilePicture = "upload_profile_picture";
-  static const photoGallery = "photo_from_galley";
-  static const photoCamera = "photo_from_camera";
-  static const home = "home";
-  static const notifications = "notification";
-  static const search = "search";
-  static const settings = "settings";
-  static const services = "services";
-  static const stores = "stores";
-  static const String details = "details";
-  static const String about = "about";
-  static const String storeDetails = "store_details";
-  static const String changeLanguage = "change_language";
-  static const String contactUs = "contact_us";
-  static const String inviteYourFriends = "invite_your_friends";
-  static const String logout = "logout";
-
-  // error handler
-  static const String badRequestError = "bad_request_error";
-  static const String noContent = "no_content";
-  static const String forbiddenError = "forbidden_error";
-  static const String unauthorizedError = "unauthorized_error";
-  static const String notFoundError = "not_found_error";
-  static const String conflictError = "conflict_error";
-  static const String internalServerError = "internal_server_error";
-  static const String unknownError = "unknown_error";
-  static const String timeoutError = "timeout_error";
-  static const String defaultError = "default_error";
-  static const String cacheError = "cache_error";
-  static const String noInternetError = "no_internet_error";
 }

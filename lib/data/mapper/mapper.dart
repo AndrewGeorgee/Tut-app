@@ -1,69 +1,63 @@
-import 'package:learn_api/app/extention.dart';
+import '../../app/constants.dart';
+import '../../domain/model/models.dart';
+import '../response/responses.dart';
+import '../mapper/extensions.dart';
 
-import '../../app/constance.dart';
-import '../../domain/entites/modelis.dart';
-import '../responce/responce.dart';
-
-extension CustomerResponseMapper on CustomerResponce? {
+extension CustomerResponseMapper on CustomerResponse? {
   Customer toDomain() {
     return Customer(
-      this?.id.orEmpty() ?? Constant.empty,
-      this?.name.orEmpty() ?? Constant.empty,
-      this?.nameOfNotification.orZero() ?? Constant.zero,
-    );
+        this?.id.orEmpty() ?? Constants.empty,
+        this?.name.orEmpty() ?? Constants.empty,
+        this?.numOfNotifications.orZero() ?? Constants.zero);
   }
 }
 
-extension ContactResponseMapper on ContactResponce? {
+extension ContactsResponseMapper on ContactsResponse? {
   Contacts toDomain() {
     return Contacts(
-      this?.phone.orEmpty() ?? Constant.empty,
-      this?.email.orEmpty() ?? Constant.empty,
-      this?.link.orEmpty() ?? Constant.empty,
-    );
+        this?.phone.orEmpty() ?? Constants.empty,
+        this?.email.orEmpty() ?? Constants.empty,
+        this?.link.orEmpty() ?? Constants.empty);
   }
 }
 
-extension AuthenticationResponseMapper on AuthenticationResponce? {
+extension AuthenticationResponseMapper on AuthenticationResponse? {
   Authentication toDomain() {
-    return Authentication(
-      this?.customer.toDomain(),
-      this?.contact.toDomain(),
-    );
+    return Authentication(this?.customer.toDomain(), this?.contacts.toDomain());
   }
 }
 
-extension ForgetPasswordResponseMapper on ForgetPasswordResponce? {
+extension ForgotPasswordResponseMapper on ForgotPasswordResponse? {
   String toDomain() {
-    return this?.support?.orEmpty() ?? Constant.empty;
+    return this?.support?.orEmpty() ?? Constants.empty;
   }
 }
 
 extension ServiceResponseMapper on ServiceResponse? {
   Service toDomain() {
     return Service(
-        this?.id.orZero() ?? Constant.zero,
-        this?.title.orEmpty() ?? Constant.empty,
-        this?.image.orEmpty() ?? Constant.empty);
+        this?.id.orZero() ?? Constants.zero,
+        this?.title.orEmpty() ?? Constants.empty,
+        this?.image.orEmpty() ?? Constants.empty);
   }
 }
 
 extension StoreResponseMapper on StoreResponse? {
   Store toDomain() {
     return Store(
-        this?.id.orZero() ?? Constant.zero,
-        this?.title.orEmpty() ?? Constant.empty,
-        this?.image.orEmpty() ?? Constant.empty);
+        this?.id.orZero() ?? Constants.zero,
+        this?.title.orEmpty() ?? Constants.empty,
+        this?.image.orEmpty() ?? Constants.empty);
   }
 }
 
 extension BannersResponseMapper on BannersResponse? {
   BannerAd toDomain() {
     return BannerAd(
-        this?.id.orZero() ?? Constant.zero,
-        this?.title.orEmpty() ?? Constant.empty,
-        this?.image.orEmpty() ?? Constant.empty,
-        this?.link.orEmpty() ?? Constant.empty);
+        this?.id.orZero() ?? Constants.zero,
+        this?.title.orEmpty() ?? Constants.empty,
+        this?.image.orEmpty() ?? Constants.empty,
+        this?.link.orEmpty() ?? Constants.empty);
   }
 }
 
@@ -101,11 +95,11 @@ extension HomeResponseMapper on HomeResponse? {
 extension StoreDetailsResponseMapper on StoreDetailsResponse? {
   StoreDetails toDomain() {
     return StoreDetails(
-        this?.id?.orZero() ?? Constant.zero,
-        this?.title?.orEmpty() ?? Constant.empty,
-        this?.image?.orEmpty() ?? Constant.empty,
-        this?.details?.orEmpty() ?? Constant.empty,
-        this?.services?.orEmpty() ?? Constant.empty,
-        this?.about?.orEmpty() ?? Constant.empty);
+        this?.id?.orZero() ?? Constants.zero,
+        this?.title?.orEmpty() ?? Constants.empty,
+        this?.image?.orEmpty() ?? Constants.empty,
+        this?.details?.orEmpty() ?? Constants.empty,
+        this?.services?.orEmpty() ?? Constants.empty,
+        this?.about?.orEmpty() ?? Constants.empty);
   }
 }
